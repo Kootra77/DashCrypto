@@ -2,7 +2,7 @@ import requests
 
 
 def get_stkaave_balance(api_key, address):
-    url = "https://api.etherscan.io/api"
+    url = "https://api.etherscan.io/v2/api?chainid=1"
     params = {
         "module": "account",
         "action": "tokenbalance",
@@ -21,3 +21,22 @@ def get_stkaave_balance(api_key, address):
         print(f"Erreur: {data['result']}")
         return None
     
+def get_ether_balance(api_key, address):
+    url = "https://api.etherscan.io/v2/api?chainid=1"
+    params = {
+        "module": "account",
+        "action": "balance",
+        "address": address,
+        "tag": "latest",
+        "apikey": api_key
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    print(data)  # Affiche la réponse complète de l'API pour le débogage
+    if data['status'] == '1':
+        balance = int(data['result']) / 10**18  # Supposant que le token a 18 décimales
+        return balance
+    else:
+        print(f"Erreur: {data['result']}")
+        return None
+ 
